@@ -58,9 +58,9 @@ ENV PATH="/opt/firmwire_venv/bin:$PATH"
 # Install panda, and deps for Shannon Panda
 WORKDIR /firmwire_deps
 RUN rm -rf panda \
-  && git clone --depth=1 https://github.com/FirmWire/panda.git \
+  && git clone --depth=1 https://github.com/SyNSec-den/panda.git \
   && cd panda \
-  && git checkout main \
+  && git checkout loris \
   && rm -rf build \
   && mkdir build \
   && cd build \
