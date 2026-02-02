@@ -157,14 +157,19 @@ PATTERNS_CORTEX_R = {
 }
 
 PATTERNS_CORTEX_A = {
-    "main_mmu_table": {
-        "pattern": "01000000 00000000 00000000 0c940100",
+    "main_mmu_table": { # "2nd instance"
+        "pattern": [
+            "01000000 00000000 00000000 0c940100", # S5123
+            "00000000 00000000 00001000 0c940100", # S5123AP: G991BXXSIHYK1, 
+        ],
         "required": True,
     },
+    
     "boot_key_check": {
         "pattern": [
             "0880 1af091f9 e2a0 29f287f0 06f03efd 05f0d4f8 3aac 8021 2046 c1f3b4dd 1aa9 2046 1022 62f21ed1",  # G991BXXSCGXF5
             "0880 19f0a5fe e2a0 25f2f5f3 06f026fd 05f0bcf8 3aac 8021 2046 b8f3dddb 1aa9 2046 1022 56f2f4d3",  # G991BXXU5CVF3
+            "0880 1af095fa e2a0 2bf221f7 06f03efd 05f0d4f8 3aac 8021 2046 c9f3d3d9 1aa9 2046 1022 6af2e0d5",  # G991BXXSIHYK1
         ],
         "offset_end": 0x0,
         "soc_match": ["S5123AP"],
@@ -174,6 +179,7 @@ PATTERNS_CORTEX_A = {
         # Search for == Task(%d) ==
         "pattern": [
             "2de9f047 86b0 4bf6882a 0446 9846 9146 0e46 0021 0122 0827 c4f2b62a 04f10803 2546 daf80000 0590 3c20 07c3 c4e90517 e161 43f64c51 2820 3c22 c4f27f01 0023 45f8041f",  # G991BXXSCGXF5
+            "2de9f047 86b0 4df6c05a 0446 9846 9146 0e46 0021 0122 0827 c4f2b72a 04f10803 2546 daf80000 0590 3c20 07c3 c4e90517 e161 45f67021 2820 3c22 c4f27f01 0023 45f8041f", # G991BXXSIHYK1
             "2de9f043 85b0 0546 9846 9146 0e46 3c20 0021 0122 0827 05f10803 2c46 07c3 c5e90517 e961 ???????? 2820 3c22 c4f2???? 0023 44f8041f",  # oriole
         ],
         "required": True,
@@ -184,6 +190,7 @@ PATTERNS_CORTEX_A = {
             "83b0 2de9f0?? ??b0 4af29018 0df14c0c 0024",  # G981BXXSKHXEA
             "83b0 2de9f0?? ??b0 4bf68828 0df14c0c 0024",  # G991BXXSCGXF5
             "83b0 2de9f04f 8ab0 45f2ec68 0df14c0c 0024",  # G991BXXU5CVF3
+            "83b0 2de9f04f 8ab0 4df6c058 0df14c0c 0024",  # G991BXXSIHYK1
         ],
         "required": True,
     },
@@ -192,6 +199,7 @@ PATTERNS_CORTEX_A = {
             "f0b5 81b0 0446 fff7ecea 0546 fff7eaea 49f28036 c4f23046 7179 8842",  # G981BXXSKHXEA
             "f0b5 81b0 0446 00f0d8e8 0546 00f0d4e8 4bf60056 c4f21256 7179 8842",  # G991BXXSCGXF5
             "f0b5 81b0 0446 00f0dae8 0546 00f0d6e8 41f24066 c4f21056 7179 8842",  # G991BXXU5CVF3
+            "f0b5 81b0 0446 00f0d8e8 0546 00f0d6e8 4ef2c006 c4f21356 7179 8842",  # G991BXXSIHYK1
             "f0b5 81b0 0446 fff7???? 0546 fff7???? ???????? c4f6???? 7179 8842",  # oriole
         ],
     },
@@ -203,7 +211,7 @@ PATTERNS_CORTEX_A = {
         "pattern": "80 00 10 e3 ?? 00 00 1a 80 00 08 f1 1e ff 2f e1",
         "align": 4,
     },
-    "disableIRQinterrupts_trap": {
+    "disableIRQinterrupts_trap": { # Match 00 00 0f e1 80 00 10 e2 then match a number of wild cards. Finally match the next Change Processor State instruction cpsi 80 00 0c f1
         "pattern": "00 00 0f e1 80 00 10 e2 ?+ 80 00 0c f1",
         "align": 4,
     },
@@ -217,6 +225,7 @@ PATTERNS_CORTEX_A = {
             "2de9f04f 85b0 0c46 9a46 9146 8046 2cb1 14f00305 18bf c5f10405 11e0",  # G981BXXSKHXEA
             "2de9f04f 85b0 4bf68825 8046 0c46 9a46 9146 c4f2b625 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0",  # G991BXXSCGXF5
             "2de9f04f 85b0 45f2ec65 8046 0c46 9a46 9146 c4f2b525 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0",  # G991BXXU5CVF3
+            "2de9f04f 85b0 4df6c055 8046 0c46 9a46 9146 c4f2b725 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0",  # G991BXXSIHYK1
         ],
     },
     "pal_MemFree": {
@@ -224,9 +233,13 @@ PATTERNS_CORTEX_A = {
             "2de9f04f 87b0 1546 0491 0646 43f2d6c7 8346 3df246c6 43f2c059 c4f20d59 99f80510 8842",  # G981BXXSKHXEA
             "2de9f04f 89b0 4bf6882a cde90421 0746 c4f2b62a daf80000 0890 6af2f0c5 0646 63f2f0c0 4ef6800b c4f2cb5b 9bf80510 8842",  # G991BXXSCGXF5
             "2de9f04f 89b0 45f2ec6a cde90421 0746 c4f2b52a daf80000 0890 5ff268c7 0646 58f2eec1 4ff6005b c4f2c85b 9bf80510 8842",  # G991BXXU5CVF3
+            "2de9f04f 89b0 4df6c05a cde90421 0746 c4f2b72a daf80000 0890 73f264c5 0646 6af224c3 40f6c04b c4f2cd5b 9bf80510 8842",  # G991BXXSIHYK1
             "2de9f04f 87b0 cde90312 8146 ???????? 8246 ???????? ???????? c4f6???? 6979 8842",  # oriole
         ],
     },
+    # using find_pal_sleep:
+    # "4af22010 c0f20700 ?+ 44f64039 ?+ c0f24c09 ?+ 4846 ?+ 4846" oriole
+    # "4af22010 c0f20700 ?+ 4ef27c00 44f64034 c4f20b50 c0f24c04 0078 0128 +? 2046 +? 2046" G991BXXSIHYK1
     "pal_Sleep": {
         "lookup": handlers.find_pal_sleep,
     },
@@ -236,6 +249,7 @@ PATTERNS_CORTEX_A = {
             "10b5 82b0 8c46 0021 1446 002c ccf80010 00d0 2170",  # G981BXXSKHXEA
             "70b5 82b0 4bf68826 1446 0a46 c4f2b626 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXSCGXF5
             "70b5 82b0 45f2ec66 1446 0a46 c4f2b526 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXU5CVF3
+            "70b5 82b0 4df6c056 1446 0a46 c4f2b726 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXSIHYK1
             "f0b5 81b0 0e46 0021 1d46 1446 002a 3160 00d0 2170",  # oriole-bp2a.250605.031.a5
         ],
         "soc_match": ["S5123", "S5123AP"],
@@ -247,6 +261,7 @@ PATTERNS_CORTEX_A = {
             "f0b5 81b0 0646 1546 0c46 b6f57a7f ?+ 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G981BXXSKHXEA
             "2de9f043 81b0 0646 9046 8946 b6f57a7f 13db 44f67070 44f61d61 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXSCGXF5
             "2de9f047 82b0 0646 9146 8a46 b6f57a7f 15db 4ef6e420 42f26521 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXU5CVF3
+            "2de9f043 81b0 0646 9046 8946 b6f57a7f 13db 47f2b820 46f6b051 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXSIHYK1
         ]
     },
     "pal_SmSetEvent": {
@@ -254,6 +269,7 @@ PATTERNS_CORTEX_A = {
             "10b5 0068 80b1 57f6c6d1 0446 4ff6ff70 0442 0ad0 45f6b801 20b2",  # G981BXXSKHXEA
             "10b5 0068 80b1 bff7f9d2 0446 4ff6ff70 0442 0ad0 44f67a51 20b2",  # G991BXXSCGXF5
             "10b5 0068 80b1 c5f715d1 0446 4ff6ff70 0442 0ad0 42f2c211 20b2",  # G991BXXU5CVF3
+            "10b5 0068 80b1 b6f787d3 0446 4ff6ff70 0442 0ad0 46f60d51 20b2",  # G991BXXSIHYK1
             "10b5 0068 80b1 ???????? 0446 4ff6ff70 0442 0ad0 ???????? 20b2",  # oriole
         ],
     },
