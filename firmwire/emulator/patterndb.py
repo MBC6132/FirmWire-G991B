@@ -170,8 +170,13 @@ class PatternDB:
 
         pat_time_start = time.time()
 
-        if "lookup" in entry:
-            addr = entry["lookup"](data, offset)
+        if "lookup" in entry: # Modify the lookup functions to accomidate S5123AP by searching multiple patterns
+            
+            if "lookup_patterns" in entry:
+                addr = entry["lookup"](data, offset, entry["lookup_patterns"])
+            else:
+                addr = entry["lookup"](data, offset)
+
         elif "pattern" in entry:
             if isinstance(entry["pattern"], str):
                 entry["pattern"] = [entry["pattern"]]

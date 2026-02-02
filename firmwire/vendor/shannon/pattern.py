@@ -239,9 +239,13 @@ PATTERNS_CORTEX_A = {
     },
     # using find_pal_sleep:
     # "4af22010 c0f20700 ?+ 44f64039 ?+ c0f24c09 ?+ 4846 ?+ 4846" oriole
-    # "4af22010 c0f20700 ?+ 4ef27c00 44f64034 c4f20b50 c0f24c04 0078 0128 +? 2046 +? 2046" G991BXXSIHYK1
+    # "4af22010 c0f20700 ?+ 4ef27c00 44f64034 c4f20b50 c0f24c04 0078 0128 ?+ 2046 ?+ 2046" G991BXXSIHYK1
     "pal_Sleep": {
         "lookup": handlers.find_pal_sleep,
+        "lookup_patterns" : [
+            "4af22010 c0f20700 ?+ 44f64039 ?+ c0f24c09 ?+ 4846 ?+ 4846",  # oriole
+            "4af22010 c0f20700 ?+ 4ef27c00 44f64034 c4f20b50 c0f24c04 0078 0128 ?+ 2046 ?+ 2046",  # G991BXXSIHYK1
+        ],
     },
     "pal_MsgReceiveMbx": {
         "pattern": [
@@ -273,7 +277,7 @@ PATTERNS_CORTEX_A = {
             "10b5 0068 80b1 ???????? 0446 4ff6ff70 0442 0ad0 ???????? 20b2",  # oriole
         ],
     },
-    "SYM_LTERRC_INT_MOB_CMD_HO_FROM_IRAT_MSG_ID": {
+    "SYM_LTERRC_INT_MOB_CMD_HO_FROM_IRAT_MSG_ID": { # ??
         "lookup": lambda data, offset: 0xc3a5,
     },
     "SYM_QUEUE_LIST": {"lookup": handlers.find_queue_table},

@@ -312,21 +312,29 @@ def decode_thumb_bl_target(insn, insn_addr):
     target = (pc + imm32) & 0xffffffff
     return target
 
-
-def find_pal_sleep(data, offset):
+# Modified to accomidate lookup patterns parameter
+def find_pal_sleep(data, offset, lookup_patterns):
     bp = BinaryPattern("pal_Sleep", offset=8)
-    bp.from_hex("4af22010 c0f20700 ?+ 44f64039 ?+ c0f24c09 ?+ 4846 ?+ 4846")  # oriole
 
-    locs = bp.findall(data)
-    assert len(locs) == 1, f"Found more than one instance or failed to find any ({len(locs)})"
+    for pattern in lookup_patterns:
+        found = False
+        bp.from_hex(pattern)  # oriole
 
-    insn_addr = 0x40010000 + locs[0][0]
-    offset = locs[0][0]
-    insn = data[offset: offset + 4]
-    insn = struct.unpack("<I", insn)[0]
-    assert validate_t1_bl(insn), "Invalid instruction ({:#010x})".format(insn)
+        locs = bp.findall(data)
+        if(len(locs) != 1):
+            print(f"[Lookup pal_Sleep]: Found more than one instance or failed to find any ({pattern},{len(locs)})")
+        else:
+            insn_addr = 0x40010000 + locs[0][0]
+            offset = locs[0][0]
+            insn = data[offset: offset + 4]
+            insn = struct.unpack("<I", insn)[0]
+            assert validate_t1_bl(insn), "Invalid instruction ({:#010x})".format(insn)
 
-    return decode_thumb_bl_target(insn, insn_addr)
+            return decode_thumb_bl_target(insn, insn_addr)
+    
+    assert found == True, f"Found no matching patterns"
+    return None
+    
 
 
 def decode_movw(insn):
