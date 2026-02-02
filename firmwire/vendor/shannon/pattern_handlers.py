@@ -226,7 +226,7 @@ def find_exception_switch(data, offset):
 
     return None
 
-
+# Need generalized function or make function more specific?
 def find_queue_table(data, offset):
     bp = BinaryPattern("queue_name", offset=1)
     bp.from_str(b"\x00AdcTask\x00")
@@ -322,7 +322,7 @@ def find_pal_sleep(data, offset, lookup_patterns):
 
         locs = bp.findall(data)
         if(len(locs) != 1):
-            print(f"[Lookup pal_Sleep]: Found more than one instance or failed to find any ({pattern},{len(locs)})")
+            print(f"[Lookup pal_Sleep]: Found more than one instance or failed to find any ({pattern}, {len(locs)})")
         else:
             insn_addr = 0x40010000 + locs[0][0]
             offset = locs[0][0]
