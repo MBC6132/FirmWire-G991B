@@ -3,7 +3,6 @@
 import struct
 import re
 from binascii import hexlify
-
 #
 # BinaryPattern by Grant Hernandez
 #
@@ -17,8 +16,23 @@ class BinaryPattern(object):
         return "<BinaryPattern '%s'>" % self.name
 
     def from_str(self, pat):
+        """
+        Converts Python bytes data to Hex representations and decodes into an ASCII string
+            Prevents escape logic errors with byte arrays for regex byte matching
+
+        Ex.
+            input =>   pat: b'\xed\x17+A'
+            process => re_pat: b'ed172b41'
+            output =>  re_pat_decoded: ed172b41
+
+        """
+        
         re_pat = rb"" + hexlify(pat)
-        self.from_hex(re_pat.decode())
+        # print(f"pat: {pat}", flush=True)
+        # print(f"re_pat: {re_pat}", flush=True)
+        # print(f"re_pat_decoded: {re_pat.decode()}", flush=True)
+
+        self.from_hex(re_pat.decode()) #
 
     def find(self, data, pos=0, maxpos=-1):
         if self.pattern is None:
@@ -50,6 +64,7 @@ class BinaryPattern(object):
         while True:
             res = self.find(data, pos=pos, maxpos=maxpos)
 
+            # print(f"findall res: {res}", flush=True)
             if res is None:
                 break
 
@@ -62,6 +77,13 @@ class BinaryPattern(object):
         return found
 
     def from_hex(self, hexpat):
+        """
+        Takes hex-form string and converts it to hex-form raw bytes array.
+        Outputted array has each hex escaped for literal byte matching in regex.
+
+        Ex.
+            output => re.compile(b'\\xed\\x17\\x2b\\x41', re.DOTALL)
+        """
         re_pat = rb""
         pos = 0
 
@@ -114,6 +136,6 @@ class BinaryPattern(object):
 
         if expect_next_hex:
             raise ValueError("Incomplete hex value at end of pattern")
-
         # We're searching through binary data -- Newlines are included
         self.pattern = re.compile(re_pat, flags=re.DOTALL)
+        # print(f"pattern: {self.pattern}", flush=True)
