@@ -149,13 +149,13 @@ class ShannonLoader(firmwire.loader.Loader):
             if self.modem_soc.name == "S5123AP":
                 mem_entries, unsafe_regions = shannon.mmu.parse_mmu_table_2(modem_main, sym.address)
             
-            print(f"mmu_entries: {mem_entries}", flush=True)
-            print(f"unsafe_mmu_regions: {unsafe_regions}", flush=True) # no unsafe regions for G991BXXSIHYK1
+            # print(f"mmu_entries: {mem_entries}", flush=True)
+            # print(f"unsafe_mmu_regions: {unsafe_regions}", flush=True) # no unsafe regions for G991BXXSIHYK1
             
-            # To inject task: this appears okay to leave in but taking out for now
-            # mem_entries.append(
-            #     MMUEntry(1313, 0x70000000, 0x00100000, 0x11c0c),
-            # )
+            # To inject task:
+            mem_entries.append(
+                MMUEntry(1313, 0x70000000, 0x00100000, 0x11c0c),
+            )
             self.unsafe_regions.extend(unsafe_regions)
         else:
             modem_main = self.modem_file.get_section("MAIN")

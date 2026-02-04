@@ -136,7 +136,6 @@ def parse_mmu_table_2(modem_main, address):
     slot = 0
     while True:
         array = data[address: address + 0x10]
-        print(f"array printed: {type(array)}", flush=True)
         virt_addr, phys_start, phys_end, flags = struct.unpack("<IIII", array) # little endian unpacking
         size = phys_end - phys_start
         prot = extract_prot_from_flags(flags)

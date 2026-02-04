@@ -227,25 +227,64 @@ def find_exception_switch(data, offset):
     return None
 
 # Need generalized function or make function more specific?
+# Need to find all AdcTask strings and pick the correct.
+# S5123 is the first string found
+# S5123AP:G991BXXSIHYK1 is the second string found
 def find_queue_table(data, offset):
     bp = BinaryPattern("queue_name", offset=1)
     bp.from_str(b"\x00AdcTask\x00")
 
-    loc = bp.find(data)
+    # Find the null terminated strings like 'task'
+    locs = []
+    npos = 0
 
-    if loc is None:
+    # Iteratively mark the positions of the matching patterns.
+    while True:
+        res = bp.find(data, pos=npos)
+        # log.info(f"[{npos}] {res}")
+        if res is None:
+            break
+
+        npos = res[1]
+        locs += [res]
+    
+    
+    if len(locs) == 0:
         return None
 
-    xref_target = loc[0] + offset
+    # log.info(f"task_search_pattern: {bp.pattern}")
+    # loc = bp.find(data)
+    
+    log.info(f"bp locs: {locs}")
+    absolute_locs = list(map(lambda t: tuple(x + offset for x in t), locs)) 
+    log.info(f"bp absolute locs: {absolute_locs}")
+
+    if locs is None:
+        return None
+
+    xref_target = locs[0][0] + offset # absolute address in memory
 
     bp_x = BinaryPattern("xref")
     bp_x.from_str(struct.pack("I", xref_target))
-    rez = bp_x.find(data)
+    rez = bp_x.findall(data, maxresults=2)
 
+    # log.info(f"rez: {rez}")
+    # log.info(f"rez results: {rez}")
+    if rez is None or len(rez) < 1:
+        # Try again but on the other string reference.
+        # It appears that S5123AP:G991BXXSIHYK1 uses locs[1][0] instead of locs[0][0] 
+        # Resolve later
+        xref_target = locs[1][0] + offset
+        # log.info(f"xref_target_2: {xref_target}")
+        bp_task_x = BinaryPattern("xref")
+        bp_task_x.from_str(struct.pack("I", xref_target))
+        # log.info(f"printed xref pattern: {bp_task_x.pattern}") 
+        rez = bp_task_x.findall(data, maxresults=2)
+    # log.info(f"rez: {rez}")
     if rez is None:
         return None
 
-    ptr = rez[0]
+    ptr = rez[0][0] # first reference for both
 
     # AdcTask's queue is the third item in the list (might not be stable)
     ptr -= QUEUE_STRUCT_SIZE * 2
@@ -535,7 +574,6 @@ def find_task_table(data, offset):
     npos = 0
 
     # Iteratively mark the positions of the matching patterns.
-    
     while True:
         res = bp_task.find(data, pos=npos)
         # log.info(f"[{npos}] {res}")
@@ -549,7 +587,7 @@ def find_task_table(data, offset):
     if len(locs) == 0:
         return None
     
-    absolute_locs = list(map(lambda t: tuple(x + offset for x in t), locs)) 
+    # absolute_locs = list(map(lambda t: tuple(x + offset for x in t), locs)) 
 
     # log.info(f"printed locs: {locs}")
     # log.info(f"printed absolute locs: {absolute_locs}")
@@ -569,7 +607,7 @@ def find_task_table(data, offset):
     rez = bp_task_x.findall(data, maxresults=2)
 
     # log.info(f"rez results: {rez}")
-    if len(rez) < 2:
+    if rez is None or len(rez) < 2:
         # Try again but on the other string reference.
         # It appears that S5123AP:G991BXXSIHYK1 uses locs[1][0] instead of locs[0][0] 
         # Resolve later

@@ -70,21 +70,36 @@ class S5123(ShannonSOC):
 
 # Define Peripherals Later
 class S5123AP(ShannonSOC):
+    # peripherals = [
+    #     SOCPERIPHERAL(PMICPeripheral, 0x8F910000, 0x1000, name="PMIC")
+    # ]
     peripherals = []
 
-    # CHIP_ID = 0x50000000
-    # SIPC_BASE = 0x8F940000
-    # SHM_BASE = 0x50000000
-    # # SHM_PERIPHERAL = SHMPeripheralCortexA
-    # SOC_BASE = 0x82020000
-    # # SOC_PERIPHERAL = ShannonSOCPeripheralCortexA
-    # SOC_CLK_BASE = 0x8a000000
-    # CLK_PERIPHERAL = S5123APClkPeripheral
-    # # IPC_PERIPHERAL = GIPCPeripheral
-    # # TIMER_BASE = SOC_BASE + 0x50000  # Timer IRQ already taken.
-    # # NUM_TIMERS = 8
-    # # iTINT0 = 32
-    # # GIC_MODEL = GicModel.A15_MPCORE
+    CHIP_ID = 0x50000000
+    SIPC_BASE = 0x8F940000
+    SHM_BASE = 0x50000000
+    SOC_BASE = 0x82020000
+    SOC_CLK_BASE = 0x8a000000
+    CLK_PERIPHERAL = S5123APClkPeripheral
+    SOC_PERIPHERAL = ShannonSOCPeripheralCortexA
+    SHM_PERIPHERAL = SHMPeripheralCortexA
+    IPC_PERIPHERAL = GIPCPeripheral
+
+    TIMER_BASE = SOC_BASE + 0x50000  # Timer IRQ already taken.
+    NUM_TIMERS = 6
+    iTINT0 = 32
+
+    GIC_MODEL = GicModel.A15_MPCORE
+
+    # SHM_PERIPHERAL = SHMPeripheralCortexA
+    
+    # SOC_PERIPHERAL = ShannonSOCPeripheralCortexA
+    
+    # IPC_PERIPHERAL = GIPCPeripheral
+    # TIMER_BASE = SOC_BASE + 0x50000  # Timer IRQ already taken.
+    # NUM_TIMERS = 8
+    # iTINT0 = 32
+    
 
     name = "S5123AP"
 
