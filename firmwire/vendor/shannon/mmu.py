@@ -136,14 +136,17 @@ def parse_mmu_table_2(modem_main, address):
     slot = 0
     while True:
         array = data[address: address + 0x10]
-        virt_addr, phys_start, phys_end, flags = struct.unpack("<IIII", array)
+        print(f"array printed: {type(array)}", flush=True)
+        virt_addr, phys_start, phys_end, flags = struct.unpack("<IIII", array) # little endian unpacking
         size = phys_end - phys_start
         prot = extract_prot_from_flags(flags)
 
-        if num_sections == 0:
+        # Copied similar logic to signal end of table
+        num_sections = size / 0x100000
+        if num_sections == 0 or size == 0:
             break
 
-        if prot == "rwx": # add check that phys_start + size == phys_end
+        if prot == "rwx":
             unsafe_regions.append((phys_start, phys_start + size))
 
         entry = MMUEntry(slot, phys_start, size, flags)
