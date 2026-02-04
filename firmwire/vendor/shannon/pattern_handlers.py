@@ -255,9 +255,9 @@ def find_queue_table(data, offset):
     # log.info(f"task_search_pattern: {bp.pattern}")
     # loc = bp.find(data)
     
-    log.info(f"bp locs: {locs}")
-    absolute_locs = list(map(lambda t: tuple(x + offset for x in t), locs)) 
-    log.info(f"bp absolute locs: {absolute_locs}")
+    # log.info(f"bp locs: {locs}")
+    # absolute_locs = list(map(lambda t: tuple(x + offset for x in t), locs)) 
+    # log.info(f"bp absolute locs: {absolute_locs}")
 
     if locs is None:
         return None
@@ -523,7 +523,8 @@ def find_trng_init(data, offset):
     addr = (addr_t << 16) | addr_w
     return addr
 
-
+# S5123 and S5123AP appear to share the same relative ordering of instructions referencing the counter.
+# The hex used in oriole may work already
 def find_counter(data, offset):
     bp = BinaryPattern("counter")
     bp.from_hex("0168 0329 ?+ 01b0 bde8f08f ?+ 50 41 4c 54 73 6b 53 73 00")

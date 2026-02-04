@@ -258,12 +258,17 @@ class ShannonLoader(firmwire.loader.Loader):
 
             self.create_peripheral(MarconiPeripheral, 0xC1800000, 0x5000, name="marconi")
             self.create_peripheral(CyclicBitPeripheral, 0xC2000000, 0x1000, name="marconi2")
-        elif self.modem_soc.name in ("S5123", ):
+        elif self.modem_soc.name in ("S5123"):
             self.create_mc_timer(0x840f0000, 0x1000)
-            self.create_peripheral(UARTPeripheral, 0x84010000, 0x1000, name="uart2")
-            self.create_peripheral(Unknown2Peripheral, 0x81020000, 0x1000, name="unk_per8")
-            self.create_peripheral(CyclicBitPeripheral, 0x14500000, 0x5000, name="marconi")
-            self.create_peripheral(CyclicBitPeripheral, 0x14420000, 0x1000, name="marconi2")
+            # self.create_peripheral(UARTPeripheral, 0x84010000, 0x1000, name="uart2")
+            # self.create_peripheral(Unknown2Peripheral, 0x81020000, 0x1000, name="unk_per8")
+            # self.create_peripheral(CyclicBitPeripheral, 0x14500000, 0x5000, name="marconi")
+            # self.create_peripheral(CyclicBitPeripheral, 0x14420000, 0x1000, name="marconi2")
+        elif self.modem_soc.name in ("S5123AP"):
+            self.create_mc_timer(0x840f0000, 0x1000) # Can't run without
+            # self.create_peripheral(UARTPeripheral, 0x84010000, 0x1000, name="uart2")
+            # self.create_peripheral(self.modem_soc.CLK_PERIPHERAL, self.modem_soc.SOC_CLK_BASE, 0xA000, name="SOC_CLK")
+            # self.create_timer(self.modem_soc.TIMER_BASE+0x000, 0x100, "tim0", 32, freq=1000, gic_model=1)
 
         if self.modem_file.has_section("NV"):
             nv = self.modem_file.get_section("NV")

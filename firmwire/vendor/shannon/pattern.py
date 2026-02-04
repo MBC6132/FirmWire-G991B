@@ -314,6 +314,6 @@ PATTERNS_CORTEX_A = {
     },
     "main_task_counter": {
         "lookup": handlers.find_counter,
-        "soc_match": ["S5123"],
+        "soc_match": ["S5123", "S5123AP"],
     },
 }
