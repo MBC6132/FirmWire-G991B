@@ -525,38 +525,68 @@ def s5123_get_dsp_sync1(self, sym, data, offset):
     return True
 
 
+# where offset is the TOC load address and data is the TOC
 def find_task_table(data, offset):
     bp_task = BinaryPattern("task", offset=1)
     bp_task.from_str(b"\x00" + TASK_NAME_TO_FIND + b"\x00")
-
+    # log.info(f"task_table_search_pattern: {TASK_NAME_TO_FIND} : {bp_task.pattern}")
     # Find the null terminated strings like 'task'
     locs = []
     npos = 0
 
+    # Iteratively mark the positions of the matching patterns.
+    
     while True:
         res = bp_task.find(data, pos=npos)
-
+        # log.info(f"[{npos}] {res}")
         if res is None:
             break
 
         npos = res[1]
         locs += [res]
-
+    
+    
     if len(locs) == 0:
         return None
+    
+    absolute_locs = list(map(lambda t: tuple(x + offset for x in t), locs)) 
 
-    xref_target = locs[0][0] + offset
+    # log.info(f"printed locs: {locs}")
+    # log.info(f"printed absolute locs: {absolute_locs}")
 
-    bp_task_x = BinaryPattern("xref")
-    bp_task_x.from_str(struct.pack("I", xref_target))
+    # Finds two locations of task. First location is referenced by table. Second not directly referenced at all.
+    xref_target = locs[0][0] + offset # str offset into binary
+
+    # log.info(f"xref_target: {xref_target}")
+
+    # This pattern search fails in some way. I will examine the way it fails by breaking down BinaryPattern functions.
+
+    bp_task_x = BinaryPattern("xref") # xref BinaryPattern
+    bp_task_x.from_str(struct.pack("I", xref_target)) # Converts absolute address to byte array to be converted into regex hex pattern
+ 
+    # log.info(f"printed xref pattern: {bp_task_x.pattern}") 
+
     rez = bp_task_x.findall(data, maxresults=2)
 
+    # log.info(f"rez results: {rez}")
     if len(rez) < 2:
+        # Try again but on the other string reference.
+        # It appears that S5123AP:G991BXXSIHYK1 uses locs[1][0] instead of locs[0][0] 
+        # Resolve later
+        xref_target = locs[1][0] + offset
+        # log.info(f"xref_target_2: {xref_target}")
+        bp_task_x = BinaryPattern("xref")
+        bp_task_x.from_str(struct.pack("I", xref_target))
+        # log.info(f"printed xref pattern: {bp_task_x.pattern}") 
+        rez = bp_task_x.findall(data, maxresults=2)
+    
+    if len(rez) < 2: 
         return None
 
     # the first result is another reference we dont care about
     ptr = rez[1][0]
 
+    # log.info(f"task_table ptr: {ptr}, {ptr + offset}")
     return ptr
 
 
