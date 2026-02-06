@@ -3,6 +3,7 @@
 from ..hw import *
 from firmwire.hw.soc import FirmWireSOC, SOCPeripheral, register_soc
 from firmwire.util.BinaryPattern import BinaryPattern
+from firmwire.vendor.shannon.hw.shannoncp import *
 
 
 class ShannonSOC(FirmWireSOC):
@@ -77,12 +78,12 @@ class S5123AP(ShannonSOC):
     CHIP_ID = 0x50000000
     SIPC_BASE = 0x8F940000
     SHM_BASE = 0x50000000
-    SOC_BASE = 0x82020000
-    SOC_CLK_BASE = 0x8a000000
+    SOC_BASE = 0x82020000 # seems correct
+    SOC_CLK_BASE = 0x8a000000 # seems correct
     CLK_PERIPHERAL = S5123APClkPeripheral
     SOC_PERIPHERAL = ShannonSOCPeripheralCortexA
-    SHM_PERIPHERAL = SHMPeripheralCortexA
-    IPC_PERIPHERAL = GIPCPeripheral
+    SHM_PERIPHERAL = SHM2Peripheral
+    IPC_PERIPHERAL = SIPCPeripheral
 
     TIMER_BASE = SOC_BASE + 0x50000  # Timer IRQ already taken.
     NUM_TIMERS = 6

@@ -260,12 +260,22 @@ class ShannonLoader(firmwire.loader.Loader):
             self.create_peripheral(CyclicBitPeripheral, 0xC2000000, 0x1000, name="marconi2")
         elif self.modem_soc.name in ("S5123"):
             self.create_mc_timer(0x840f0000, 0x1000)
-            # self.create_peripheral(UARTPeripheral, 0x84010000, 0x1000, name="uart2")
-            # self.create_peripheral(Unknown2Peripheral, 0x81020000, 0x1000, name="unk_per8")
-            # self.create_peripheral(CyclicBitPeripheral, 0x14500000, 0x5000, name="marconi")
-            # self.create_peripheral(CyclicBitPeripheral, 0x14420000, 0x1000, name="marconi2")
+            self.create_peripheral(UARTPeripheral, 0x84010000, 0x1000, name="uart2")
+            self.create_peripheral(Unknown2Peripheral, 0x81020000, 0x1000, name="unk_per8")
+            self.create_peripheral(CyclicBitPeripheral, 0x14500000, 0x5000, name="marconi")
+            self.create_peripheral(CyclicBitPeripheral, 0x14420000, 0x1000, name="marconi2")
         elif self.modem_soc.name in ("S5123AP"):
-            self.create_mc_timer(0x840f0000, 0x1000) # Can't run without
+            pass
+            self.create_peripheral(UARTPeripheral, 0x84000000, 0x1000, name="boot_uart")
+            self.create_peripheral(UARTPeripheral, 0x84010000, 0x1000, name='boot_uart_2')
+
+
+            self.create_peripheral(Unknown12Peripheral, 0x8f910000, 0x1000, name="unk_per12") # pass through 0x8f910000
+            self.create_peripheral(Unknown13Peripheral, 0x840f024c, 0x100, name="unk_per13") # pass through 0x840f024c
+            self.create_peripheral(Unknown14Peripheral, 0x84010000, 0x100, name="unk_per14") # pass through 0x000062ba
+            # self.create_mc_timer(0x840f0000, 0x1000)
+            # self.create_mc_timer(0x840f0000, 0x1000) DAT_8f910000
+            # self.create_peripheral(Unknown12Peripheral, 0x00003d88, 0x10000, name="unk_per12") # pass through
             # self.create_peripheral(UARTPeripheral, 0x84010000, 0x1000, name="uart2")
             # self.create_peripheral(self.modem_soc.CLK_PERIPHERAL, self.modem_soc.SOC_CLK_BASE, 0xA000, name="SOC_CLK")
             # self.create_timer(self.modem_soc.TIMER_BASE+0x000, 0x100, "tim0", 32, freq=1000, gic_model=1)
