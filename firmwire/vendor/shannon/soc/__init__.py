@@ -4,7 +4,7 @@ from ..hw import *
 from firmwire.hw.soc import FirmWireSOC, SOCPeripheral, register_soc
 from firmwire.util.BinaryPattern import BinaryPattern
 from firmwire.vendor.shannon.hw.shannoncp import *
-
+from firmwire.vendor.shannon.hw.DSPPeripheral import *
 
 class ShannonSOC(FirmWireSOC):
     # Start in BOOT (can be overwritten)
@@ -97,16 +97,17 @@ class S5123AP(ShannonSOC):
     def __init__(self, date, main_section):
         super().__init__(date, main_section)
 
-        # self.peripherals += [
-        #     SOCPeripheral(DSPPeripheralCortexA, 0x4f45a000, 0x1000, name="DSPPeripheral", sync=[0xc1, 0x1c8]),
-        #     SOCPeripheral(self.CLK_PERIPHERAL,  0x10400000, 0x1000, name="SOC_CLK2"),
-        #     SOCPeripheral(self.CLK_PERIPHERAL,  0x12050000, 0x1000, name="SOC_CLK3"),
-        #     SOCPeripheral(SysCmuPeripheral,     0x83000000, 0x4000, name="SYS_CMU"),
-        #     SOCPeripheral(Unknown5Peripheral,   0x11861000, 0x1000, name="UNK5"),
-        #     SOCPeripheral(MsiPeripheral,        0x15000000, 0x1000, name="MSI"),
-        #     SOCPeripheral(Unknown7Peripheral,   0x10000000, 0x1000, name="UNK7"),
-        #     SOCPeripheral(Unknown11Peripheral,  0x83050000, 0x1000, name="UNK11"),
-        # ]
+        self.peripherals += [
+            SOCPeripheral(
+                DSP2Peripheral,
+                0x4a75a000, # G991BXXSIHYK1 DSP base
+                0x1000,
+                name="DSPPeripheral",
+                sync=[0xc1, 0x1bc],
+            ),
+            # SOCPeripheral(Unknown4Peripheral, 0x95820000, 0x1000, name="unk_per4"),
+            # SOCPeripheral(SysCfgPeripheral, 0x82000000, 0x1000, name="SYSCFG"),
+        ]
 
 
 class S5000AP(ShannonSOC):

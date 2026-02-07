@@ -10,24 +10,30 @@ from . import FirmWirePeripheral, LoggingPeripheral
 
 class UARTPeripheral(FirmWirePeripheral):
     def hw_read(self, offset, size):
+        value = 0
         if offset == 0x18:
-            return self.status
+            value = self.status
+        elif offset == 0x30:
+            value = self.unk_30
 
-        return 0
+        return value
 
     def hw_write(self, offset, size, value):
         if offset == 0:
             sys.stderr.write(chr(value & 0xFF))
             sys.stderr.flush()
+        elif offset == 0x30:
+            self.unk_30 = value
         else:
-            self.log_write(value, size, "UART")
+            self.log_write(value, size, f"UART_{offset:x}")
 
         return True
 
     def __init__(self, name, address, size, **kwargs):
         super().__init__(name, address, size, **kwargs)
 
-        self.status = 0
+        self.status = 0x10
+        self.unk_30 = 0
 
         self.write_handler[0:size] = self.hw_write
         self.read_handler[0:size] = self.hw_read
@@ -35,6 +41,7 @@ class UARTPeripheral(FirmWirePeripheral):
         # init of this peripheral bypasses shannon peripheral, hence we set pc
         # dummy value manually
         self.pc = 0
+
 
 
 class MotoUARTPeripheral(LoggingPeripheral):

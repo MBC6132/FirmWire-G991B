@@ -286,19 +286,25 @@ PATTERNS_CORTEX_A = {
         "lookup": handlers.find_task_table,
         "post_lookup": handlers.fixup_set_task_layout,
     },
-    "DSP_SYNC_WORD_0": {
-        "pattern": "80b5 82b0 0368 ???????? 4ff48f70 ???????? ???????? cde90010 ??a0 c121 ???????? 02b0 80bd",
+    "   ": {
+        "pattern": [
+            "80b5 82b0 0368 ???????? 4ff48f70 ???????? ???????? cde90010 ??a0 c121 ???????? 02b0 80bd",
+            "80b5 82b0 0368 46f65401 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 38f081df 02b0 80bd", # G991BXXSIHYK1
+        ],
         "offset": 28,
         "post_lookup": handlers.s5123_get_dsp_sync0,
         "required": False,
-        "soc_match": ["S5123"],
+        "soc_match": ["S5123", "S5123AP"],
     },
     "DSP_SYNC_WORD_1": {
-        "pattern": "80b5 82b0 0368 ???????? 4ff48f70 ???????? ???????? cde90010 ??a0 c121 ???????? 02b0 80bd",
+        "pattern": [
+            "80b5 82b0 0368 ???????? 4ff48f70 ???????? ???????? cde90010 ??a0 c121 ???????? 02b0 80bd",
+            "80b5 82b0 0368 46f65401 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 38f081df 02b0 80bd", # G991BXXSIHYK1
+        ],
         "offset": 14,
         "post_lookup": handlers.s5123_get_dsp_sync1,
         "required": False,
-        "soc_match": ["S5123"],
+        "soc_match": ["S5123", "S5123AP"],
     },
     "rf_hwid": {
         "lookup": handlers.find_rf_hwid,

@@ -178,55 +178,55 @@ class Unknown12Peripheral(LoggingPeripheral):
         self.write_handler[0:size] = self.hw_write
 
 # S5123AP: G991BXXSIHYK1 :
-"""
-  do {
-  } while ((DAT_840f024c & 0x10000) == 0);
-"""
-class Unknown13Peripheral(LoggingPeripheral):
-    def hw_read(self, offset, size):
-        if offset == 0x0:
-            value = 0x10000  # (DAT_840f024c & 0x10000) != 0
-            offset_name = "UNK13"
-            self.log_read(value, size, offset_name)
-        else:
-            value = super().hw_read(offset, size)
+# """
+#   do {
+#   } while ((DAT_840f024c & 0x10000) == 0);
+# """
+# class Unknown13Peripheral(LoggingPeripheral):
+#     def hw_read(self, offset, size):
+#         if offset == 0x0:
+#             value = 0x10000  # (DAT_840f024c & 0x10000) != 0
+#             offset_name = "UNK13"
+#             self.log_read(value, size, offset_name)
+#         else:
+#             value = super().hw_read(offset, size)
 
-        return value
+#         return value
 
-    def hw_write(self, offset, size, value):
+#     def hw_write(self, offset, size, value):
         
-        return super().hw_write(offset, size, value)
+#         return super().hw_write(offset, size, value)
 
-    def __init__(self, name, address, size, **kwargs):
-        super().__init__(name, address, size, **kwargs)
+#     def __init__(self, name, address, size, **kwargs):
+#         super().__init__(name, address, size, **kwargs)
 
-        self.read_handler[0:size] = self.hw_read
-        self.write_handler[0:size] = self.hw_write
+#         self.read_handler[0:size] = self.hw_read
+#         self.write_handler[0:size] = self.hw_write
 
-# S5123AP: G991BXXSIHYK1 : At 0x40cc9a0c, 0x40cc98fc is param 1 to uart_main_1. iVar12 = *(int *)(param_1 + 0x80); 
-# This dereferences to 0x000062ba as a value
-# 0x000062ba + 0x18 is the location of the peripheral stuck
-"""
-    do {
-    } while ((*(uint *)(iVar12 + 0x18) & 0x10) == 0);
-"""
-class Unknown14Peripheral(LoggingPeripheral):
-    def hw_read(self, offset, size):
-        if offset == 0x18:
-            value = 0x10  # ((*(uint *)(iVar12 + 0x18) & 0x10) != 0
-            offset_name = "UNK14"
-            self.log_read(value, size, offset_name)
-        else:
-            value = super().hw_read(offset, size)
+# S5123AP: G991BXXSIHYK1 : At 0x40cc9a0c, DAT_42d0a940 of value 00 3e a4 44 is param 1 to uart_main_1. iVar12 = *(int *)(param_1 + 0x80); 
+# This dereferences 0x44A43E80 to give &DAT_84010000 as value which was written by uart_main
+# # 0x84010000 + 0x18 is the location of the peripheral stuck
+# """
+#     do {
+#     } while ((*(uint *)(iVar12 + 0x18) & 0x10) == 0);
+# """
+# class Unknown14Peripheral(LoggingPeripheral):
+#     def hw_read(self, offset, size):
+#         if offset == 0x18:
+#             value = 0x10  # ((*(uint *)(iVar12 + 0x18) & 0x10) != 0
+#             offset_name = "UNK14"
+#             self.log_read(value, size, offset_name)
+#         else:
+#             value = super().hw_read(offset, size)
 
-        return value
+#         return value
 
-    def hw_write(self, offset, size, value):
+#     def hw_write(self, offset, size, value):
         
-        return super().hw_write(offset, size, value)
+#         return super().hw_write(offset, size, value)
 
-    def __init__(self, name, address, size, **kwargs):
-        super().__init__(name, address, size, **kwargs)
+#     def __init__(self, name, address, size, **kwargs):
+#         super().__init__(name, address, size, **kwargs)
 
-        self.read_handler[0:size] = self.hw_read
-        self.write_handler[0:size] = self.hw_write
+#         self.read_handler[0:size] = self.hw_read
+#         self.write_handler[0:size] = self.hw_write
