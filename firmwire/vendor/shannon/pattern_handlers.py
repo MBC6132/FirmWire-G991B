@@ -287,6 +287,7 @@ def find_queue_table(data, offset):
     ptr = rez[0][0] # first reference for both
 
     # AdcTask's queue is the third item in the list (might not be stable)
+    # Stable for S5123AP:G991BXXSIHYK1
     ptr -= QUEUE_STRUCT_SIZE * 2
 
     return offset + ptr

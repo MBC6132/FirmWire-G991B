@@ -276,6 +276,14 @@ class ShannonLoader(firmwire.loader.Loader):
             self.create_peripheral(CyclicBitPeripheral, 0x8a100000, 0x5000, name="marconi")
             self.create_peripheral(CyclicBitPeripheral, 0x8a020000, 0x1000, name="marconi2")
 
+            self.create_timer(self.modem_soc.TIMER_BASE + 0x000, 0x100, "tim0", 32, freq=1000, gic_model=1)
+            self.create_timer(self.modem_soc.TIMER_BASE + 0x100, 0x100, "tim1", 33, freq=1000, gic_model=1)
+            self.create_timer(self.modem_soc.TIMER_BASE + 0x200, 0x100, "tim2", 34, freq=6000000, gic_model=1)
+            self.create_timer(self.modem_soc.TIMER_BASE + 0x300, 0x100, "tim3", 35, freq=6000000, gic_model=1)
+            self.create_timer(self.modem_soc.TIMER_BASE + 0x400, 0x100, "tim4", 36, freq=6000000, gic_model=1)
+            self.create_timer(self.modem_soc.TIMER_BASE + 0x500, 0x100, "tim5", 37, freq=6000000, gic_model=1)
+            self.create_timer(self.modem_soc.TIMER_BASE + 0x600, 0x100, "tim6", 38, gic_model=1)
+            self.create_timer(self.modem_soc.TIMER_BASE + 0x700, 0x100, "tim7", 39, gic_model=1)
 
             self.create_peripheral(UARTPeripheral, 0x84000000, 0x1000, name="boot_uart")
             self.create_peripheral(UARTPeripheral, 0x84010000, 0x1000, name='boot_uart_2')
