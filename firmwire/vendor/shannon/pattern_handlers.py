@@ -241,7 +241,6 @@ def find_queue_table(data, offset):
     # Iteratively mark the positions of the matching patterns.
     while True:
         res = bp.find(data, pos=npos)
-        # log.info(f"[{npos}] {res}")
         if res is None:
             break
 
@@ -252,13 +251,6 @@ def find_queue_table(data, offset):
     if len(locs) == 0:
         return None
 
-    # log.info(f"task_search_pattern: {bp.pattern}")
-    # loc = bp.find(data)
-    
-    # log.info(f"bp locs: {locs}")
-    # absolute_locs = list(map(lambda t: tuple(x + offset for x in t), locs)) 
-    # log.info(f"bp absolute locs: {absolute_locs}")
-
     if locs is None:
         return None
 
@@ -268,19 +260,13 @@ def find_queue_table(data, offset):
     bp_x.from_str(struct.pack("I", xref_target))
     rez = bp_x.findall(data, maxresults=2)
 
-    # log.info(f"rez: {rez}")
-    # log.info(f"rez results: {rez}")
     if rez is None or len(rez) < 1:
         # Try again but on the other string reference.
         # It appears that S5123AP:G991BXXSIHYK1 uses locs[1][0] instead of locs[0][0] 
-        # Resolve later
         xref_target = locs[1][0] + offset
-        # log.info(f"xref_target_2: {xref_target}")
         bp_task_x = BinaryPattern("xref")
         bp_task_x.from_str(struct.pack("I", xref_target))
-        # log.info(f"printed xref pattern: {bp_task_x.pattern}") 
         rez = bp_task_x.findall(data, maxresults=2)
-    # log.info(f"rez: {rez}")
     if rez is None:
         return None
 
@@ -359,7 +345,7 @@ def find_pal_sleep(data, offset, lookup_patterns):
 
     for pattern in lookup_patterns:
         found = False
-        bp.from_hex(pattern)  # oriole
+        bp.from_hex(pattern)
 
         locs = bp.findall(data)
         if(len(locs) != 1):
@@ -367,12 +353,9 @@ def find_pal_sleep(data, offset, lookup_patterns):
             # print(f"[Lookup pal_Sleep]: Found more than one instance or failed to find any ({pattern}, {len(locs)})")
         else:
             insn_addr = 0x40010000 + locs[0][0]
-            # log.info(f"ins_addr: {insn_addr}")
             offset = locs[0][0]
-            # log.info(f"offset: {offset}")
             insn = data[offset: offset + 4]
             insn = struct.unpack("<I", insn)[0]
-            # log.info(f"insn: {insn}")
             assert validate_t1_bl(insn), "Invalid instruction ({:#010x})".format(insn)
 
             return decode_thumb_bl_target(insn, insn_addr)
@@ -529,8 +512,7 @@ def find_trng_init(data, offset):
     addr = (addr_t << 16) | addr_w
     return addr
 
-# S5123 and S5123AP appear to share the same relative ordering of instructions referencing the counter.
-# The hex used in oriole may work already
+
 def find_counter(data, offset):
     bp = BinaryPattern("counter")
     bp.from_hex("0168 0329 ?+ 01b0 bde8f08f ?+ 50 41 4c 54 73 6b 53 73 00")
@@ -575,7 +557,7 @@ def s5123_get_dsp_sync1(self, sym, data, offset):
 def find_task_table(data, offset):
     bp_task = BinaryPattern("task", offset=1)
     bp_task.from_str(b"\x00" + TASK_NAME_TO_FIND + b"\x00")
-    # log.info(f"task_table_search_pattern: {TASK_NAME_TO_FIND} : {bp_task.pattern}")
+
     # Find the null terminated strings like 'task'
     locs = []
     npos = 0
@@ -583,10 +565,8 @@ def find_task_table(data, offset):
     # Iteratively mark the positions of the matching patterns.
     while True:
         res = bp_task.find(data, pos=npos)
-        # log.info(f"[{npos}] {res}")
         if res is None:
             break
-
         npos = res[1]
         locs += [res]
     
@@ -594,35 +574,21 @@ def find_task_table(data, offset):
     if len(locs) == 0:
         return None
     
-    # absolute_locs = list(map(lambda t: tuple(x + offset for x in t), locs)) 
 
-    # log.info(f"printed locs: {locs}")
-    # log.info(f"printed absolute locs: {absolute_locs}")
+    # Finds two locations of task
+    xref_target = locs[0][0] + offset 
 
-    # Finds two locations of task. First location is referenced by table. Second not directly referenced at all.
-    xref_target = locs[0][0] + offset # str offset into binary
-
-    # log.info(f"xref_target: {xref_target}")
-
-    # This pattern search fails in some way. I will examine the way it fails by breaking down BinaryPattern functions.
-
-    bp_task_x = BinaryPattern("xref") # xref BinaryPattern
-    bp_task_x.from_str(struct.pack("I", xref_target)) # Converts absolute address to byte array to be converted into regex hex pattern
- 
-    # log.info(f"printed xref pattern: {bp_task_x.pattern}") 
+    bp_task_x = BinaryPattern("xref")
+    bp_task_x.from_str(struct.pack("I", xref_target)) 
 
     rez = bp_task_x.findall(data, maxresults=2)
 
-    # log.info(f"rez results: {rez}")
     if rez is None or len(rez) < 2:
         # Try again but on the other string reference.
         # It appears that S5123AP:G991BXXSIHYK1 uses locs[1][0] instead of locs[0][0] 
-        # Resolve later
         xref_target = locs[1][0] + offset
-        # log.info(f"xref_target_2: {xref_target}")
         bp_task_x = BinaryPattern("xref")
         bp_task_x.from_str(struct.pack("I", xref_target))
-        # log.info(f"printed xref pattern: {bp_task_x.pattern}") 
         rez = bp_task_x.findall(data, maxresults=2)
     
     if len(rez) < 2: 
@@ -631,7 +597,6 @@ def find_task_table(data, offset):
     # the first result is another reference we dont care about
     ptr = rez[1][0]
 
-    # log.info(f"task_table ptr: {ptr}, {ptr + offset}")
     return ptr
 
 
