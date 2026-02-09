@@ -346,7 +346,8 @@ def decode_thumb_bl_target(insn, insn_addr):
         imm32 = imm25
 
     # In Thumb state, PC is instruction address + 4 (aligned to 4 bytes)
-    pc = (insn_addr + 4) & ~0x3
+    # pc = (insn_addr + 4) & ~0x3 
+    pc = (insn_addr + 4) & ~0x1 # Alignment to 2 bytes possible in G991BXXSCGXF5
 
     # Target address
     target = (pc + imm32) & 0xffffffff
@@ -365,9 +366,12 @@ def find_pal_sleep(data, offset, lookup_patterns):
             print(f"[Lookup pal_Sleep]: Found more than one instance or failed to find any ({pattern}, {len(locs)})")
         else:
             insn_addr = 0x40010000 + locs[0][0]
+            log.info(f"ins_addr: {insn_addr}")
             offset = locs[0][0]
+            log.info(f"offset: {offset}")
             insn = data[offset: offset + 4]
             insn = struct.unpack("<I", insn)[0]
+            log.info(f"insn: {insn}")
             assert validate_t1_bl(insn), "Invalid instruction ({:#010x})".format(insn)
 
             return decode_thumb_bl_target(insn, insn_addr)

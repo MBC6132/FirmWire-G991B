@@ -160,7 +160,12 @@ PATTERNS_CORTEX_A = {
     "main_mmu_table": { # "2nd instance"
         "pattern": [
             "01000000 00000000 00000000 0c940100", # S5123
-            "00000000 00000000 00001000 0c940100", # S5123AP: G991BXXSIHYK1, 
+            "00000000 00000000 00001000 0c940100", # S5123AP: G991BXXSIHYK1
+            "00000000 00000000 00001000 0c940100", # S5123AP: G991BXXSCGXF5
+            "00000000 00000000 00001000 0c940100"  # G991BXXSDGXI5
+            "00000000 00000000 00001000 0c940100", # G991BXXSEGXL2
+            "00000000 00000000 00001000 0c940100", # G991BXXSFHYE1
+            "00000000 00000000 00001000 0c940100", # G991BXXSGHYH1
         ],
         "required": True,
     },
@@ -170,6 +175,10 @@ PATTERNS_CORTEX_A = {
             "0880 1af091f9 e2a0 29f287f0 06f03efd 05f0d4f8 3aac 8021 2046 c1f3b4dd 1aa9 2046 1022 62f21ed1",  # G991BXXSCGXF5
             "0880 19f0a5fe e2a0 25f2f5f3 06f026fd 05f0bcf8 3aac 8021 2046 b8f3dddb 1aa9 2046 1022 56f2f4d3",  # G991BXXU5CVF3
             "0880 1af095fa e2a0 2bf221f7 06f03efd 05f0d4f8 3aac 8021 2046 c9f3d3d9 1aa9 2046 1022 6af2e0d5",  # G991BXXSIHYK1
+            "0880 1af0c7f9 e2a0 29f287f2 06f03efd 05f0d4f8 3aac 8021 2046 c2f312d8 1aa9 2046 1022 64f2eed3",  # G991BXXSDGXI5
+            "0880 1af0c9f9 e2a0 29f2c1f2 06f03efd 05f0d4f8 3aac 8021 2046 c2f39cd8 1aa9 2046 1022 63f2ead1",  # G991BXXSEGXL2
+            "0880 1af095fa e2a0 2bf2b7f6 06f03efd 05f0d4f8 3aac 8021 2046 c9f32bda 1aa9 2046 1022 6af246d6",  # G991BXXSFHYE1
+            "0880 1af095fa e2a0 2bf217f7 06f03efd 05f0d4f8 3aac 8021 2046 c9f3cbd9 1aa9 2046 1022 6af2d4d5",  # G991BXXSGHYH1
         ],
         "offset_end": 0x0,
         "soc_match": ["S5123AP"],
@@ -178,8 +187,12 @@ PATTERNS_CORTEX_A = {
     "set_task_affinity": {
         # Search for == Task(%d) ==
         "pattern": [
-            "2de9f047 86b0 4bf6882a 0446 9846 9146 0e46 0021 0122 0827 c4f2b62a 04f10803 2546 daf80000 0590 3c20 07c3 c4e90517 e161 43f64c51 2820 3c22 c4f27f01 0023 45f8041f",  # G991BXXSCGXF5
+            "2de9f047 86b0 4bf6882a 0446 9846 9146 0e46 0021 0122 0827 c4f2b62a 04f10803 2546 daf80000 0590 3c20 07c3 c4e90517 e161 43f64c51 2820 3c22 c4f27f01 0023 45f8041f", # G991BXXSCGXF5
             "2de9f047 86b0 4df6c05a 0446 9846 9146 0e46 0021 0122 0827 c4f2b72a 04f10803 2546 daf80000 0590 3c20 07c3 c4e90517 e161 45f67021 2820 3c22 c4f27f01 0023 45f8041f", # G991BXXSIHYK1
+            "2de9f047 86b0 4ff2d85a 0446 9846 9146 0e46 0021 0122 0827 c4f2b62a 04f10803 2546 daf80000 0590 3c20 07c3 c4e90517 e161 43f68371 2820 3c22 c4f27f01 0023 45f8041f", # G991BXXSDGXI5
+            "2de9f047 86b0 4ff2580a 0446 9846 9146 0e46 0021 0122 0827 c4f2b62a 04f10803 2546 daf80000 0590 3c20 07c3 c4e90517 e161 44f29131 2820 3c22 c4f27f01 0023 45f8041f", # G991BXXSEGXL2
+            "2de9f047 86b0 4df2f05a 0446 9846 9146 0e46 0021 0122 0827 c4f2b72a 04f10803 2546 daf80000 0590 3c20 07c3 c4e90517 e161 45f67021 2820 3c22 c4f27f01 0023 45f8041f", # G991BXXSFHYE1
+            "2de9f047 86b0 4df2f05a 0446 9846 9146 0e46 0021 0122 0827 c4f2b72a 04f10803 2546 daf80000 0590 3c20 07c3 c4e90517 e161 45f67021 2820 3c22 c4f27f01 0023 45f8041f", # G991BXXSGHYH1
             "2de9f043 85b0 0546 9846 9146 0e46 3c20 0021 0122 0827 05f10803 2c46 07c3 c5e90517 e961 ???????? 2820 3c22 c4f2???? 0023 44f8041f",  # oriole
         ],
         "required": True,
@@ -191,6 +204,10 @@ PATTERNS_CORTEX_A = {
             "83b0 2de9f0?? ??b0 4bf68828 0df14c0c 0024",  # G991BXXSCGXF5
             "83b0 2de9f04f 8ab0 45f2ec68 0df14c0c 0024",  # G991BXXU5CVF3
             "83b0 2de9f04f 8ab0 4df6c058 0df14c0c 0024",  # G991BXXSIHYK1
+            "83b0 2de9f04f 8ab0 4ff2d858 0df14c0c 0024",  # G991BXXSDGXI5
+            "83b0 2de9f04f 8ab0 4ff25808 0df14c0c 0024",  # G991BXXSEGXL2
+            "83b0 2de9f04f 8ab0 4df2f058 0df14c0c 0024",  # G991BXXSFHYE1
+            "83b0 2de9f04f 8ab0 4df2f058 0df14c0c 0024",  # G991BXXSGHYH1
         ],
         "required": True,
     },
@@ -200,6 +217,10 @@ PATTERNS_CORTEX_A = {
             "f0b5 81b0 0446 00f0d8e8 0546 00f0d4e8 4bf60056 c4f21256 7179 8842",  # G991BXXSCGXF5
             "f0b5 81b0 0446 00f0dae8 0546 00f0d6e8 41f24066 c4f21056 7179 8842",  # G991BXXU5CVF3
             "f0b5 81b0 0446 00f0d8e8 0546 00f0d6e8 4ef2c006 c4f21356 7179 8842",  # G991BXXSIHYK1
+            "f0b5 81b0 0446 00f0dce8 0546 00f0d8e8 4ff68006 c4f21256 7179 8842",  # G991BXXSDGXI5
+            "f0b5 81b0 0446 00f0d8e8 0546 00f0d4e8 4ff20036 c4f21256 7179 8842",  # G991BXXSEGXL2
+            "f0b5 81b0 0446 00f0dce8 0546 00f0d8e8 4df6c006 c4f21356 7179 8842",  # G991BXXSFHYE1
+            "f0b5 81b0 0446 00f0d8e8 0546 00f0d6e8 4df6c006 c4f21356 7179 8842", # G991BXXSGHYH1
             "f0b5 81b0 0446 fff7???? 0546 fff7???? ???????? c4f6???? 7179 8842",  # oriole
         ],
     },
@@ -226,6 +247,10 @@ PATTERNS_CORTEX_A = {
             "2de9f04f 85b0 4bf68825 8046 0c46 9a46 9146 c4f2b625 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0",  # G991BXXSCGXF5
             "2de9f04f 85b0 45f2ec65 8046 0c46 9a46 9146 c4f2b525 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0",  # G991BXXU5CVF3
             "2de9f04f 85b0 4df6c055 8046 0c46 9a46 9146 c4f2b725 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0",  # G991BXXSIHYK1
+            "2de9f04f 85b0 4ff2d855 8046 0c46 9a46 9146 c4f2b625 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0",  # G991BXXSDGXI5
+            "2de9f04f 85b0 4ff25805 8046 0c46 9a46 9146 c4f2b625 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0", # G991BXXSEGXL2
+            "2de9f04f 85b0 4df2f055 8046 0c46 9a46 9146 c4f2b725 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0", # G991BXXSFHYE1
+            "2de9f04f 85b0 4df2f055 8046 0c46 9a46 9146 c4f2b725 002c 2868 0490 05d0 14f00307 18bf c7f10407 11e0", # G991BXXSGHYH1
         ],
     },
     "pal_MemFree": {
@@ -234,6 +259,10 @@ PATTERNS_CORTEX_A = {
             "2de9f04f 89b0 4bf6882a cde90421 0746 c4f2b62a daf80000 0890 6af2f0c5 0646 63f2f0c0 4ef6800b c4f2cb5b 9bf80510 8842",  # G991BXXSCGXF5
             "2de9f04f 89b0 45f2ec6a cde90421 0746 c4f2b52a daf80000 0890 5ff268c7 0646 58f2eec1 4ff6005b c4f2c85b 9bf80510 8842",  # G991BXXU5CVF3
             "2de9f04f 89b0 4df6c05a cde90421 0746 c4f2b72a daf80000 0890 73f264c5 0646 6af224c3 40f6c04b c4f2cd5b 9bf80510 8842",  # G991BXXSIHYK1
+            "2de9f04f 89b0 4ff2d85a cde90421 0746 c4f2b62a daf80000 0890 6cf202c7 0646 63f2f4c3 42f2404b c4f2cc5b 9bf80510 8842",  # G991BXXSDGXI5
+            "2de9f04f 89b0 4ff2580a cde90421 0746 c4f2b62a daf80000 0890 6bf200c5 0646 63f244c4 41f6c06b c4f2cc5b 9bf80510 8842", # G991BXXSEGXL2
+            "2de9f04f 89b0 4df2f05a cde90421 0746 c4f2b72a daf80000 0890 73f2cec5 0646 6af292c3 40f2c04b c4f2cd5b 9bf80510 8842", # G991BXXSFHYE1
+            "2de9f04f 89b0 4df2f05a cde90421 0746 c4f2b72a daf80000 0890 73f258c5 0646 6af218c3 40f2c04b c4f2cd5b 9bf80510 8842", # G991BXXSGHYH1
             "2de9f04f 87b0 cde90312 8146 ???????? 8246 ???????? ???????? c4f6???? 6979 8842",  # oriole
         ],
     },
@@ -245,6 +274,11 @@ PATTERNS_CORTEX_A = {
         "lookup_patterns" : [
             "4af22010 c0f20700 ?+ 44f64039 ?+ c0f24c09 ?+ 4846 ?+ 4846",  # oriole
             "4af22010 c0f20700 ?+ 4ef27c00 44f64034 c4f20b50 c0f24c04 0078 0128 ?+ 2046 ?+ 2046",  # G991BXXSIHYK1
+            "4af22010 c0f20700 ?+ 4bf6bc40 44f64034 c4f20a50 c0f24c04 0078 0128 ?+ 2046 ?+ 2046",  # G991BXXSCGXF5
+            "4af22010 c0f20700 ?+ 4ff63c00 44f64034 c4f20a50 c0f24c04 0078 0128 ?+ 2046 ?+ 2046",  # G991BXXSDGXI5
+            "4af22010 c0f20700 ?+ 4ff2bc20 44f64034 c4f20a50 c0f24c04 0078 0128 ?+ 2046 ?+ 2046",  # G991BXXSEGXL2
+            "4af22010 c0f20700 ?+ 4df67c00 44f64034 c4f20b50 c0f24c04 0078 0128 ?+ 2046 ?+ 2046",  # G991BXXSFHYE1
+            "4af22010 c0f20700 ?+ 4df67c00 44f64034 c4f20b50 c0f24c04 0078 0128 ?+ 2046 ?+ 2046",  # G991BXXSGHYH1
         ],
     },
     "pal_MsgReceiveMbx": {
@@ -254,6 +288,10 @@ PATTERNS_CORTEX_A = {
             "70b5 82b0 4bf68826 1446 0a46 c4f2b626 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXSCGXF5
             "70b5 82b0 45f2ec66 1446 0a46 c4f2b526 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXU5CVF3
             "70b5 82b0 4df6c056 1446 0a46 c4f2b726 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXSIHYK1
+            "70b5 82b0 4ff2d856 1446 0a46 c4f2b626 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXSDGXI5
+            "70b5 82b0 4ff25806 1446 0a46 c4f2b626 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXSEGXL2
+            "70b5 82b0 4df2f056 1446 0a46 c4f2b726 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXSFHYE1
+            "70b5 82b0 4df2f056 1446 0a46 c4f2b726 3168 0191 0021 002c 1160 00d0 2170",  # G991BXXSGHYH1
             "f0b5 81b0 0e46 0021 1d46 1446 002a 3160 00d0 2170",  # oriole-bp2a.250605.031.a5
         ],
         "soc_match": ["S5123", "S5123AP"],
@@ -266,6 +304,10 @@ PATTERNS_CORTEX_A = {
             "2de9f043 81b0 0646 9046 8946 b6f57a7f 13db 44f67070 44f61d61 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXSCGXF5
             "2de9f047 82b0 0646 9146 8a46 b6f57a7f 15db 4ef6e420 42f26521 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXU5CVF3
             "2de9f043 81b0 0646 9046 8946 b6f57a7f 13db 47f2b820 46f6b051 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXSIHYK1
+            "2de9f043 81b0 0646 9046 8946 b6f57a7f 13db 48f6c020 45f2f801 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXSDGXI5
+            "2de9f043 81b0 0646 9046 8946 b6f57a7f 13db 48f24050 45f20651 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXSEGXL2
+            "2de9f043 81b0 0646 9046 8946 b6f57a7f 13db 46f6e820 46f6b051 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXSFHYE1
+            "2de9f043 81b0 0646 9046 8946 b6f57a7f 13db 46f6e820 46f6b051 2de90f00 bff35f8f 01df bff35f8f bde80f00",  # G991BXXSGHYH1
         ]
     },
     "pal_SmSetEvent": {
@@ -274,22 +316,31 @@ PATTERNS_CORTEX_A = {
             "10b5 0068 80b1 bff7f9d2 0446 4ff6ff70 0442 0ad0 44f67a51 20b2",  # G991BXXSCGXF5
             "10b5 0068 80b1 c5f715d1 0446 4ff6ff70 0442 0ad0 42f2c211 20b2",  # G991BXXU5CVF3
             "10b5 0068 80b1 b6f787d3 0446 4ff6ff70 0442 0ad0 46f60d51 20b2",  # G991BXXSIHYK1
+            "10b5 0068 80b1 bff737d2 0446 4ff6ff70 0442 0ad0 45f25501 20b2",  # G991BXXSDGXI5
+            "10b5 0068 80b1 bff720d2 0446 4ff6ff70 0442 0ad0 45f26341 20b2",  # G991BXXSEGXL2
+            "10b5 0068 80b1 b6f723d3 0446 4ff6ff70 0442 0ad0 46f60d51 20b2",  # G991BXXSFHYE1
+            "10b5 0068 80b1 b6f729d3 0446 4ff6ff70 0442 0ad0 46f60d51 20b2",  # G991BXXSGHYH1
             "10b5 0068 80b1 ???????? 0446 4ff6ff70 0442 0ad0 ???????? 20b2",  # oriole
         ],
     },
     "SYM_LTERRC_INT_MOB_CMD_HO_FROM_IRAT_MSG_ID": { # ??
         "lookup": lambda data, offset: 0xc3a5,
     },
-    "SYM_QUEUE_LIST": {"lookup": handlers.find_queue_table},
-    "SYM_CUR_TASK_PTR": {"lookup": handlers.find_current_task_ptr_a},
-    "SYM_TASK_LIST": {
+    "SYM_QUEUE_LIST": {"lookup": handlers.find_queue_table},            # G991BXXSIHYK1, oriole
+    "SYM_CUR_TASK_PTR": {"lookup": handlers.find_current_task_ptr_a},   # G991BXXSIHYK1, oriole
+    "SYM_TASK_LIST": {                                                  # G991BXXSIHYK1, oriole
         "lookup": handlers.find_task_table,
         "post_lookup": handlers.fixup_set_task_layout,
     },
     "   ": {
         "pattern": [
             "80b5 82b0 0368 ???????? 4ff48f70 ???????? ???????? cde90010 ??a0 c121 ???????? 02b0 80bd",
-            "80b5 82b0 0368 46f65401 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 38f081df 02b0 80bd", # G991BXXSIHYK1
+            "80b5 82b0 0368 46f65401 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 38f081df 02b0 80bd",  # G991BXXSIHYK1
+            "80b5 82b0 0368 44f6c101 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 2bf0b9df 02b0 80bd",  # G991BXXSCGXF5
+            "80b5 82b0 0368 44f69c31 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 2cf0c9da 02b0 80bd",  # G991BXXSDGXI5
+            "80b5 82b0 0368 44f6aa71 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 2cf047db 02b0 80bd",  # G991BXXSEGXL2
+            "80b5 82b0 0368 46f65401 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 38f023df 02b0 80bd",  # G991BXXSFHYE1
+            "80b5 82b0 0368 46f65401 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 38f079df 02b0 80bd", # G991BXXSGHYH1
         ],
         "offset": 28,
         "post_lookup": handlers.s5123_get_dsp_sync0,
@@ -300,6 +351,11 @@ PATTERNS_CORTEX_A = {
         "pattern": [
             "80b5 82b0 0368 ???????? 4ff48f70 ???????? ???????? cde90010 ??a0 c121 ???????? 02b0 80bd",
             "80b5 82b0 0368 46f65401 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 38f081df 02b0 80bd", # G991BXXSIHYK1
+            "80b5 82b0 0368 44f6c101 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 2bf0b9df 02b0 80bd", # G991BXXSCGXF5
+            "80b5 82b0 0368 44f69c31 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 2cf0c9da 02b0 80bd", # G991BXXSDGXI5
+            "80b5 82b0 0368 44f6aa71 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 2cf047db 02b0 80bd", # G991BXXSEGXL2
+            "80b5 82b0 0368 46f65401 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 38f023df 02b0 80bd",  # G991BXXSFHYE1
+            "80b5 82b0 0368 46f65401 4ff49570 4ff4de72 c4f28801 cde90010 03a0 c121 38f079df 02b0 80bd", # G991BXXSGHYH1
         ],
         "offset": 14,
         "post_lookup": handlers.s5123_get_dsp_sync1,
