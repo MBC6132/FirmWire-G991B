@@ -636,3 +636,32 @@ def get_dsp_sync1(self, sym, data, offset):
     self.symbol_table.add(sym.name, sync_word)
     log.info(f"Retrieved sync word 1: {sync_word}")
     return True
+
+def find_smpf_task_created(self, offset):
+    # "2de9f043 83b0 0446 a068 10f4007f 43d1 47f29401 c4f28171 0978 0029 40d0 617b 4029 01d3 0021 6173", # oriole-uq1a.240205.002
+    # "2de9f043 83b0 0446 a068 10f4007f 43d1 41f6d411 c4f28271 0978 0029 40d0 617b 4029 01d3 0021 6173", # oriole-bp1a.250505.005
+
+    # "2de9f047 84b0 4bf68827 0446 c4f2b627 3868 0390 a068 10f4007f 43d1 4df64071 c4f2cc41 0978 0029 40d0 617b 4029 01d3 0021 6173", # G991BXXSCGXF5
+    # "2de9f047 84b0 4df6c057 0446 c4f2b727 3868 0390 a068 10f4007f 43d1 40f22031 c4f2ce41 0978 0029 40d0 617b 4029 01d3 0021 6173", # G991BXXSIHYK1
+
+    # Find the movw and movt instructions forming address used in ldrb instruction: 0x7809
+
+    bp = BinaryPattern("smpf_task_created_addr")
+    bp.from_hex("0978 0029 40d0 617b 4029 01d3 0021 6173") # patterns very specific so far
+
+    locs = bp.findall(data)
+    assert len(locs) == 1, f"Found more than one instance or failed to find any ({len(locs)})"
+
+    # movw
+    offset = locs[0][0] - 8 
+    insn1 = data[offset: offset + 4]
+    insn1 = struct.unpack("<I", insn1)[0]
+    addr_w = decode_movw(insn1)
+
+    # movt
+    insn2 = data[offset + 4: offset + 8]
+    insn2 = struct.unpack("<I", insn2)[0]
+    addr_t = decode_movw(insn2)
+
+    addr = (addr_t << 16) | addr_w
+    return addr
