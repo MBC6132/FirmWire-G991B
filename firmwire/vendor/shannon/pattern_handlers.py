@@ -665,3 +665,19 @@ def find_smpf_task_created(self, offset):
 
     addr = (addr_t << 16) | addr_w
     return addr
+
+def find_mm_msg_class(self, offset):
+
+    # Obtaining .node_id matching handler func: MM_RRC_DATA_IND_Handler
+    # Take add.w instruction closest to assignment and take the immediate out. 
+    # Have the start of the pattern be the movw instruction,
+    # and find the next movt instruction that uses the same register eventually used in add.w.
+
+    # Oriole Pattern:
+    # 40f23b0b c4f23101 c4f2ba12 c0f2c14b 01f10806 0660 616c c0f80ca0 c0e90112 2860 85f804a0 0295 cdf804b0 01a9 4046 09f1e3f5 0820 3946 4c22 0023 75f3a2f6 0546 1020 ... c4f2ba12 c0f80ca0 c0e90112 2860 0bf10500 85f804a0 0295 0190 # oriole-ap2a.240905.003.f1
+    # 40f23b0b c4f23101 c4f2ba12 c0f2c14b 01f10806 0660 616c c0f80ca0 c0e90112 2860 85f804a0 0295 cdf804b0 01a9 4046 08f112f4 0820 3946 4c22 0023 77f366f5 0546 1020 ... c4f2ba12 c0f80ca0 c0e90112 2860 0bf10500 85f804a0 0295 0190 # oriole-bp2a.250605.031.a5
+
+    # G991B Pattern:
+
+    # 4ef27e00 2c71 0195 6946 c0f24040 0090 8146 4046 a0f17af7 0820 3946 4d22 0023 41f22af5 0546 1020 ... c4f2dc02 c460 c0e90112 2860 09f10900 2c71 0195 6946 0090 # G991BXXSCGXF5
+    # 4ef27e00 2c71 0195 6946 c0f24040 0090 8146 4046 9cf137f2 0820 3946 4d22 0023 46f2b4f6 0546 1020 ... c4f2dc02 c460 c0e90112 2860 09f10900 2c71 0195 6946 0090 # G991BXXSIHYK1

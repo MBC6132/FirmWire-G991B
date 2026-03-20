@@ -324,7 +324,6 @@ PATTERNS_CORTEX_A = {
     # decode the movw and movt:
     #   420d5240 41 f6 d4 11     movw       r1,#0x19d4
     #   420d5244 c4 f2 82 71     movt       r1,#0x4782
-
     "SMPF_TASK_CREATED": {
         "lookup": handlers.find_smpf_task_created,
         "soc_match": ["S5123","S5123AP"],
@@ -395,6 +394,10 @@ PATTERNS_CORTEX_A = {
             "b0b5 0c46 0546 012c 03d1 2846 0221 ccf79cfe e86c 2146 bde8b040 c7f641b2", # G991BXXSEGXL2
             "b0b5 0c46 0546 012c 03d1 2846 0221 cef73ef8 e86c 2146 bde8b040 c7f697b2", # G991BXXSDGXI5
         ],
+        "soc_match": ["S5123","S5123AP"],
+    },
+    "MM_MSG_CLASS": {
+        "lookup": handlers.find_mm_msg_class,
         "soc_match": ["S5123","S5123AP"],
     },
 }
