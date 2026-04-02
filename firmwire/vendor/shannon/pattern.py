@@ -400,4 +400,8 @@ PATTERNS_CORTEX_A = {
         "lookup": handlers.find_mm_msg_class,
         "soc_match": ["S5123","S5123AP"],
     },
+    "MM_MSG_DOMAIN": {
+        "lookup": handlers.find_mm_msg_domain,
+        "soc_match": ["S5123","S5123AP"],
+    },
 }

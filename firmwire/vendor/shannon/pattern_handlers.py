@@ -666,6 +666,18 @@ def find_smpf_task_created(self, offset):
     addr = (addr_t << 16) | addr_w
     return addr
 
+
+
+# find_mm_msg_class: Search for the following handler function signature compare loop
+
+    # 41bab586 b4 f5 16 7f     cmp.w      r4,#0x258
+    # 41bab58a 22 46           mov        r2,r4
+    # 41bab58c 39 46           mov        param_1,p_ded_nas_info
+    # 41bab58e 43 46           mov        r3=>SUB_fecdba98,r8
+    # 41bab590 04 90           str        this,[sp,#local_28]
+    # 41bab592 28 bf           it         cs
+    # 41bab594 4f f4 16 72     mov.cs.w   r2,#0x258
+
 def find_mm_msg_class(self, offset):
 
     # Obtaining .node_id matching handler func: MM_RRC_DATA_IND_Handler
@@ -680,4 +692,67 @@ def find_mm_msg_class(self, offset):
     # G991B Pattern:
 
     # 4ef27e00 2c71 0195 6946 c0f24040 0090 8146 4046 a0f17af7 0820 3946 4d22 0023 41f22af5 0546 1020 ... c4f2dc02 c460 c0e90112 2860 09f10900 2c71 0195 6946 0090 # G991BXXSCGXF5
-    # 4ef27e00 2c71 0195 6946 c0f24040 0090 8146 4046 9cf137f2 0820 3946 4d22 0023 46f2b4f6 0546 1020 ... c4f2dc02 c460 c0e90112 2860 09f10900 2c71 0195 6946 0090 # G991BXXSIHYK1
+    # 4ef27e00 2c71 0195 6946 c0f24040 0090 8146 4046 9cf137f2 0820 3946 4d22 0023 46f2b4f6 0546 1020 ...    # G991BXXSIHYK1
+    
+
+    bp = BinaryPattern("mm_msg_class_addr")
+    bp.from_hex("") # patterns very specific so far
+
+    locs = bp.findall(data)
+    assert len(locs) == 1, f"Found more than one instance or failed to find any ({len(locs)})"
+
+    # first instruction: movw
+    offset = locs[0][0] # start
+    insn1 = data[offset: offset + 4]
+    insn1 = struct.unpack("<I", insn1)[0]
+    addr_w = decode_movw(insn1)
+
+    # find next movt instruction:
+    from capstone import *
+    
+    md = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
+
+    for ins in md.disasm(data[offset:], 0x0) # dissasmble with base address 0
+        if ins.mnemonic = "movt"
+            insn2 = int.from_bytes(ins.bytes, "little")
+            break   
+
+    addr_t = decode_movw(insn2)
+
+    addr_mov = (addr_t << 16) | addr_w
+
+    # find add.w close to end of pattern
+    offset = locs[0][1] # end
+    search_bytes = data[max(0, offset - 64):offset]
+
+    for ins in md.disasm(search_bytes, 0x0)
+        if ins.mnemonic = "add" & ".w" in ins.op_str:
+            add_insn = int.from_bytes(ins.bytes, "little")
+    
+    # Using the cortex A documentation file:///home/mutt/Downloads/DDI0406C_arm_architecture_reference_manual.pdf
+    
+    # Example:
+    #     little: 00001001 11110001 00001001 00000000
+    #        big: 00000000 00001001 11110001 00001001
+
+    #  Encoding (little endian): Lower halfword in big endian (15-0); Upper halfword in big endian (15-0)
+    #  Encoding (little endian): 1 1 1 0 i 0 1 0 0 0 S Rn 0 imm3 Rd imm8
+
+    # Should just be able to use the movw immediate decode function, but example:
+
+    lower_encoded_hw_big_endian = add_insn & 0xffff
+    upper_encoded_hw_big_endian = (add_ins >> 0x10) & 0xffff
+    i = (lower_encoded_hw_big_endian >> 10) & 0x1 
+    imm3 = (upper_encoded_hw_big_endian >> 12) & 0x7
+    imm8 = upper_encoded_hw_big_endian & 0xff 
+
+    imm12 = (i << 11) | (imm3 << 8) | imm8
+    imm32_add = thumb_expand_imm(imm12)
+    
+    addr = addr_mov + imm32_add
+
+    return addr
+
+def find_mm_msg_domain(self, offset):
+
+    return 0x7fe00400 # constant
